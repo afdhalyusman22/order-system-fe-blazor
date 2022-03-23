@@ -1,0 +1,23 @@
+@page "/travel-package/addedit/{id:int?}"
+@using Services
+@inject ITravelPackageServices TravelPackageServices
+@inject IJSRuntime JSRuntime
+
+<PageTitle>Edit Travel Package</PageTitle>
+
+<h1>Edit Travel Package</h1>
+
+<div class="form-group">
+    <label>Firstname</label>
+    <input type="text" class="form-control" />
+</div>
+
+<div class="form-group">
+    <label>Lastname</label>
+    <input type="text" class="form-control" />
+</div>
+
+@code {
+    [Parameter]
+    public int? id { get; set; }
+}

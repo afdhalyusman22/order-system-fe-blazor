@@ -1,0 +1,67 @@
+@page "/travel-package"
+@using Models.TravelPackages
+@using Services
+@inject ITravelPackageServices TravelPackageServices
+@inject IJSRuntime JSRuntime
+
+
+<PageTitle>Travel Package</PageTitle>
+
+<h1>Travel Package</h1>
+<a href="/travel-package/add" class="btn btn-outline-success"> add</a>
+@if (travelPackage == null)
+{
+    <p><em>Data Travel Package tidak tersedia</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var package in travelPackage)
+            {
+                <tr>
+                    <td>@package.id</td>
+                    <td>@package.name</td>
+                    <td>@package.description</td>
+                    <td>
+
+                        <a @onclick="() => delete(package)" class="btn btn-outline-danger">delete</a>
+                        <a href="/travel-package/edit/@package.id" class="btn btn-outline-primary">
+                            edit
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private TravelPackages[]? travelPackage;
+    protected override async Task OnInitializedAsync()
+    {
+        travelPackage = await TravelPackageServices.GetAllItems();
+        Console.WriteLine(travelPackage);
+    }
+
+    async Task delete(TravelPackages data)
+    {
+        if (!await JSRuntime.InvokeAsync<bool>("confirm", $"Are you sure you want to delete the package '{data.name}'?"))
+            return;
+        Console.WriteLine(data.id);
+        bool result = await TravelPackageServices.DeleteItem(data.id);
+        string message = result ? $"success delete package '{data.name}'" : $"failed delete package '{data.name}'";
+        await JSRuntime.InvokeVoidAsync("alert", message); // Alert
+
+        travelPackage = await TravelPackageServices.GetAllItems();
+    }
+
+}

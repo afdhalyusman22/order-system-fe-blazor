@@ -1,0 +1,65 @@
+@page "/order"
+@using Models.Orders
+@using Services
+
+@inject IOrderServices OrderServices
+@inject IJSRuntime JSRuntime
+
+<PageTitle>Order</PageTitle>
+
+<h1>Order</h1>
+<a href="/order/add" class="btn btn-outline-success"> add</a>
+@if (orders == null)
+{
+    <p><em>Data Order tidak tersedia</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Order ID</th>
+                <th>Order Date</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in orders)
+            {
+                <tr>
+                    <td>@order.id</td>
+                    <td>@order.orderId</td>
+                    <td>@order.orderDate</td>
+                    <td>
+                        <a @onclick="() => delete(order)" class="btn btn-outline-danger">delete</a>
+                        <a href="/order/edit/@order.id" class="btn btn-outline-primary">
+                            edit
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+@code {
+    private Orders[]? orders;
+    protected override async Task OnInitializedAsync()
+    {
+        orders = await OrderServices.GetAllItems();
+        Console.WriteLine(orders);
+    }
+
+    async Task delete(Orders data)
+    {
+        if (!await JSRuntime.InvokeAsync<bool>("confirm", $"Are you sure you want to delete the order '{data.orderId}'?"))
+            return;
+        Console.WriteLine(data.id);
+        bool result = await OrderServices.DeleteItem(data.id);
+        string message = result ? $"success delete order '{data.orderId}'" : $"failed delete order '{data.orderId}'";
+        await JSRuntime.InvokeVoidAsync("alert", message); // Alert
+
+        orders = await OrderServices.GetAllItems();
+    }
+
+}

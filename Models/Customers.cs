@@ -1,4 +1,6 @@
-namespace order_system_fe_blazor.Models;
+using System.ComponentModel.DataAnnotations;
+
+namespace order_system_fe_blazor.Models.Customers;
 
 public class Attributes
 {
@@ -33,4 +35,17 @@ public class Customers
 {
     public List<Data> data { get; set; }
     public Meta meta { get; set; }
+}
+
+public class CustomerDetail
+{
+    public int id { get; set; }
+    [Required]
+    public string firstname { get; set; }
+    public string lastname { get; set; }
+    [Required]
+    public string phone { get; set; }
+    [Required]
+    public string address { get; set; }
+
 }

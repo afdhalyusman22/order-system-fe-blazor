@@ -1,0 +1,95 @@
+@page "/customer/addedit/{id:int?}"
+@using Models.Customers
+@using Services
+@inject ICustomerServices CustomerServices
+@inject IJSRuntime JSRuntime
+@inject NavigationManager navigationManager
+
+<PageTitle>Edit Customer</PageTitle>
+
+<div class="row">
+    <div class="col-md-12">
+        <h1>Details for @customers.firstname</h1>
+    </div>
+    <br />
+    <EditForm Model="@customers" OnValidSubmit="@HandleValidRequest" OnInvalidSubmit="HandleInvalidRequest">
+        <DataAnnotationsValidator />
+        <ValidationSummary></ValidationSummary>
+        <div class="form-group">
+            <label class="col-md-3">Firstname</label>
+            <InputText class="col-md-8" @bind-Value="@customers.firstname"></InputText>
+            <ValidationMessage For="@(() => customers.firstname)" />
+        </div>
+        <div class="form-group">
+            <label class="col-md-3">Lastname</label>
+            <InputText class="col-md-8" @bind-Value="@customers.lastname"></InputText>
+            <ValidationMessage For="@(() => customers.lastname)" />
+        </div>
+        <div class="form-group">
+            <label class="col-md-3">Phone</label>
+            <InputText class="col-md-8" @bind-Value="@customers.phone"></InputText>
+            <ValidationMessage For="@(() => customers.phone)" />
+        </div>
+        <div class="form-group">
+            <label class="col-md-3">Address</label>
+            <InputTextArea class="col-md-8" @bind-Value="@customers.address"></InputTextArea>
+            <ValidationMessage For="@(() => customers.address)" />
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-warning">Save</button>
+            <a @onclick="@goBack" class="btn btn-primary">Back</a>
+        </div>
+    </EditForm>
+
+</div>
+
+@code {
+    [Parameter] public int? id { get; set; }
+    private CustomerDetail customers = new CustomerDetail();
+    protected string Message = string.Empty;
+    protected bool Saved;
+    protected override async Task OnInitializedAsync()
+    {
+        Console.WriteLine(id);
+        if (id != null)
+        {
+            customers = await CustomerServices.GetItemDetails(Convert.ToInt32(id));
+        }
+        Console.WriteLine(customers);
+    }
+
+    protected void goBack()
+    {
+        navigationManager.NavigateTo("/customer");
+    }
+
+    protected async Task HandleValidRequest()
+    {
+        Console.WriteLine("submit");
+        if (id != null) // We need to add the item
+        {
+            @* var res = await TodoDataService.AddItem(Item);
+
+                if(res != null)
+                {
+                Saved = true;
+                Message = "Item has been added";
+                } else
+                {
+                Message = "Something went wrong";
+                } *@
+        }
+        else // We are updating the item
+        {
+            //await TodoDataService.UpdateItem(Item);
+            Saved = true;
+            Message = "Item has been updated";
+        }
+    }
+
+    protected void HandleInvalidRequest()
+    {
+        Message = "Failed to submit form";
+    }
+}

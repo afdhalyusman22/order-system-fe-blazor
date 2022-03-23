@@ -1,0 +1,75 @@
+@page "/customer"
+@using Models.Customers
+@using Services
+@inject ICustomerServices CustomerServices
+@inject IJSRuntime JSRuntime
+
+<PageTitle>Customer</PageTitle>
+
+<h1>Customer</h1>
+
+<a href="/customer/addedit" class="btn btn-outline-success"> add</a>
+@if (customers == null)
+{
+    <p><em>Data Customer tidak tersedia</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Firstname</th>
+                <th>Lastname</th>
+                <th>Phone</th>
+                <th>Address</th>
+                <th>Created At</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var cust in customers.data)
+            {
+                <tr>
+                    <td>@cust.id</td>
+                    <td>@cust.attributes.firstname</td>
+                    <td>@cust.attributes.lastname</td>
+                    <td>@cust.attributes.phone</td>
+                    <td>@cust.attributes.address</td>
+                    <td>@cust.attributes.createdAt</td>
+                    <td>
+                        <a @onclick="() => delete(cust)" class="btn btn-outline-danger">delete</a>
+                        <a href="/customer/addedit/@cust.id" class="btn btn-outline-primary">
+                            edit
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+@code {
+    private Customers? customers;
+    protected override async Task OnInitializedAsync()
+    {
+        customers = await CustomerServices.GetAllItems();
+        Console.WriteLine(customers.data);
+    }
+
+    async Task delete(Data data)
+    {
+        if ( !await JSRuntime.InvokeAsync<bool>("confirm", $"Are you sure you want to delete the customer '{data.attributes.firstname}'?"))
+            return;
+            Console.WriteLine(data.id);
+         bool result = await CustomerServices.DeleteItem(data.id);
+        string message = result ? $"success delete customer '{data.attributes.firstname}'" : $"failed delete customer '{data.attributes.firstname}'";
+        await JSRuntime.InvokeVoidAsync("alert", message); // Alert
+
+         customers = await CustomerServices.GetAllItems();
+
+    }
+
+
+}

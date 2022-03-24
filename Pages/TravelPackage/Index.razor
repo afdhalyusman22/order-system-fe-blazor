@@ -8,7 +8,7 @@
 <PageTitle>Travel Package</PageTitle>
 
 <h1>Travel Package</h1>
-<a href="/travel-package/add" class="btn btn-outline-success"> add</a>
+<a href="/travel-package/addedit/" class="btn btn-outline-success"> add</a>
 @if (travelPackage == null)
 {
     <p><em>Data Travel Package tidak tersedia</em></p>
@@ -34,7 +34,7 @@ else
                     <td>
 
                         <a @onclick="() => delete(package)" class="btn btn-outline-danger">delete</a>
-                        <a href="/travel-package/edit/@package.id" class="btn btn-outline-primary">
+                                <a href="/travel-package/addedit/@package.id" class="btn btn-outline-primary">
                             edit
                         </a>
                     </td>

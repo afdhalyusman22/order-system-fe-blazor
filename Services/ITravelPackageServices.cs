@@ -11,4 +11,7 @@ public interface ITravelPackageServices
 {
     Task<TravelPackages[]> GetAllItems();
     Task<bool> DeleteItem(int id);
+    Task<TravelPackages> GetItemDetails(int id);
+    Task<bool> UpdateItem(TravelPackages item, int id);
+    Task<bool> AddItem(TravelPackages item);
 }

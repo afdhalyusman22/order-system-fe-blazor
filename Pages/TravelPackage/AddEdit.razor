@@ -1,23 +1,93 @@
 @page "/travel-package/addedit/{id:int?}"
+@using Models.TravelPackages
 @using Services
 @inject ITravelPackageServices TravelPackageServices
 @inject IJSRuntime JSRuntime
+@inject NavigationManager navigationManager
 
-<PageTitle>Edit Travel Package</PageTitle>
+<PageTitle>@Title</PageTitle>
 
-<h1>Edit Travel Package</h1>
+<div class="row">
+    <div class="col-md-12">
+        <h1>@Title</h1>
+    </div>
+    <br />
+    <EditForm Model="@packages" OnValidSubmit="@HandleValidRequest" OnInvalidSubmit="HandleInvalidRequest">
+        <DataAnnotationsValidator />
+        <div class="form-group">
+            <label class="col-md-3">Name</label>
+            <InputText class="col-md-8" @bind-Value="@packages.name"></InputText>
+            <ValidationMessage For="@(() => packages.name)" />
+            </div>
+            <div class="form-group">
+                <label class="col-md-3">Description</label>
+                <InputText class="col-md-8" @bind-Value="@packages.description"></InputText>
+                <ValidationMessage For="@(() => packages.description)" />
+            </div>
 
-<div class="form-group">
-    <label>Firstname</label>
-    <input type="text" class="form-control" />
-</div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-warning">Save</button>
+            <a @onclick="@goBack" class="btn btn-primary">Back</a>
+            </div>
+            </EditForm>
 
-<div class="form-group">
-    <label>Lastname</label>
-    <input type="text" class="form-control" />
 </div>
 
 @code {
     [Parameter]
     public int? id { get; set; }
+    private TravelPackages packages = new TravelPackages();
+    protected string Title = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Console.WriteLine(id);
+        if (id != null)
+        {
+            packages = await TravelPackageServices.GetItemDetails(Convert.ToInt32(id));
+            Title = "Edit Travel Packages";
+        }
+        else
+            Title = "Add Travel Packages";
+        Console.WriteLine(packages);
+    }
+
+    protected void goBack()
+    {
+        navigationManager.NavigateTo("/travel-package");
+    }
+
+    protected async Task HandleValidRequest()
+    {
+        Console.WriteLine("submit id" + id);
+        Console.WriteLine(packages);
+        if (id != null)
+        {
+            Console.WriteLine("edit customer");
+            var result = await TravelPackageServices.UpdateItem(packages, Convert.ToInt32(id));
+
+            string message = result ? $"success update packages '{packages.name}'" : $"failed update packages '{packages.name}'";
+            await JSRuntime.InvokeVoidAsync("alert", message); // Alert
+            
+            if(result)
+                navigationManager.NavigateTo("/travel-package");
+        }
+        else 
+        {
+            
+            Console.WriteLine("add customer");
+            var result = await TravelPackageServices.AddItem(packages);
+            string message = result ? $"success add packages '{packages.name}'" : $"failed add packages '{packages.name}'";
+            await JSRuntime.InvokeVoidAsync("alert", message); // Alert
+
+            if(result)
+                navigationManager.NavigateTo("/travel-package");
+        }
+
+    }
+
+    protected async Task HandleInvalidRequest()
+    {
+        await JSRuntime.InvokeVoidAsync("alert", "Failed to submit form"); // Alert
+    }
 }

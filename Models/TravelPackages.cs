@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 namespace order_system_fe_blazor.Models.TravelPackages;
 
 public class Small
@@ -70,6 +71,7 @@ public class File
 public class TravelPackages
 {
     public int id { get; set; }
+    [Required]
     public string name { get; set; }
     public string description { get; set; }
     public List<File> files { get; set; }

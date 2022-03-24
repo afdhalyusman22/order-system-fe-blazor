@@ -7,42 +7,48 @@
 
 <PageTitle>Travel Package</PageTitle>
 
-<h1>Travel Package</h1>
-<a href="/travel-package/addedit/" class="btn btn-outline-success"> add</a>
-@if (travelPackage == null)
-{
-    <p><em>Data Travel Package tidak tersedia</em></p>
-}
-else
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var package in travelPackage)
-            {
-                <tr>
-                    <td>@package.id</td>
-                    <td>@package.name</td>
-                    <td>@package.description</td>
-                    <td>
+<div class="card">
+    <div class="card-header">
+        Order
+    </div>
+    <div class="card-body">
+        <a href="/travel-package/addedit/" class="btn btn-outline-success"> add</a>
+        @if (travelPackage == null)
+        {
+            <p><em>Data Travel Package tidak tersedia</em></p>
+        }
+        else
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var package in travelPackage)
+                    {
+                        <tr>
+                            <td>@package.id</td>
+                            <td>@package.name</td>
+                            <td>@package.description</td>
+                            <td>
 
-                        <a @onclick="() => delete(package)" class="btn btn-outline-danger">delete</a>
+                                <a @onclick="() => delete(package)" class="btn btn-outline-danger">delete</a>
                                 <a href="/travel-package/addedit/@package.id" class="btn btn-outline-primary">
-                            edit
-                        </a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
+                                    edit
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
 
 @code {
     private TravelPackages[]? travelPackage;

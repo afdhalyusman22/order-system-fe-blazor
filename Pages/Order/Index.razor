@@ -6,52 +6,57 @@
 @inject IJSRuntime JSRuntime
 
 <PageTitle>Order</PageTitle>
-
-<h1>Order</h1>
-@if (orders == null)
-{
-    <p><em>Data Order tidak tersedia</em></p>
-}
-else
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Order ID</th>
-                <th>Order Date</th>
+<div class="card">
+    <div class="card-header">
+        Order
+    </div>
+    <div class="card-body">
+        @if (orders == null)
+        {
+            <p><em>Data Order tidak tersedia</em></p>
+        }
+        else
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Order ID</th>
+                        <th>Order Date</th>
                         <th>Status</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var order in orders)
-            {
-                <tr>
-                    <td>@order.id</td>
-                    <td>@order.orderId</td>
-                    <td>@order.orderDate</td>
-                                    <td>@order.status.name</td>
-                    <td>
-                        @if (order.status.name.ToUpper() == "SUBMITTED")
-                        {
-                                                    <a @onclick="() => delete(order)" class="btn btn-outline-danger">delete</a>
-                                                    <a href="/order/moderate/@order.id" class="btn btn-outline-primary">
-                                                        moderate
-                                                    </a>
-                        }
-                        else
-                        {
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var order in orders)
+                    {
+                        <tr>
+                            <td>@order.id</td>
+                            <td>@order.orderId</td>
+                            <td>@order.orderDate</td>
+                            <td>@order.status.name</td>
+                            <td>
+                                @if (order.status.name.ToUpper() == "SUBMITTED")
+                                {
+                                    <a @onclick="() => delete(order)" class="btn btn-outline-danger">delete</a>
+                                    <a href="/order/moderate/@order.id" class="btn btn-outline-primary">
+                                        moderate
+                                    </a>
+                                }
+                                else
+                                {
                                     <a href="/order/detail/@order.id" class="btn btn-outline-primary">
                                         detail
                                     </a>
-                        }
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
 @code {
     private Orders[]? orders;
     protected override async Task OnInitializedAsync()

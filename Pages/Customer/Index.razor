@@ -6,7 +6,11 @@
 
 <PageTitle>Customer</PageTitle>
 
-<h1>Customer</h1>
+<div class="card">
+    <div class="card-header">
+        Order
+    </div>
+    <div class="card-body">
 
 <a href="/customer/addedit" class="btn btn-outline-success"> add</a>
 @if (customers == null)
@@ -48,6 +52,8 @@ else
         </tbody>
     </table>
 }
+    </div>
+    </div>
 
 
 @code {

@@ -8,29 +8,33 @@
 <PageTitle>@Title</PageTitle>
 
 <div class="row">
-    <div class="col-md-12">
-        <h1>@Title</h1>
-    </div>
-    <br />
-    <EditForm Model="@packages" OnValidSubmit="@HandleValidRequest" OnInvalidSubmit="HandleInvalidRequest">
-        <DataAnnotationsValidator />
-        <div class="form-group">
-            <label class="col-md-3">Name</label>
-            <InputText class="col-md-8" @bind-Value="@packages.name"></InputText>
-            <ValidationMessage For="@(() => packages.name)" />
-            </div>
-            <div class="form-group">
-                <label class="col-md-3">Description</label>
-                <InputText class="col-md-8" @bind-Value="@packages.description"></InputText>
-                <ValidationMessage For="@(() => packages.description)" />
-            </div>
+    <div class="card">
+        <div class="card-header">
+            @Title
+        </div>
+        <div class="card-body">
+            <EditForm Model="@packages" OnValidSubmit="@HandleValidRequest" OnInvalidSubmit="HandleInvalidRequest">
+                <DataAnnotationsValidator />
+                <div class="form-group">
+                    <label class="col-md-3">Name</label>
+                    <InputText class="col-md-8 form-control" @bind-Value="@packages.name"></InputText>
+                    <ValidationMessage For="@(() => packages.name)" />
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3">Description</label>
+                    <InputText class="col-md-8 form-control" @bind-Value="@packages.description"></InputText>
+                    <ValidationMessage For="@(() => packages.description)" />
+                    </div>
+                <hr />
 
-        <div class="form-group">
-            <button type="submit" class="btn btn-warning">Save</button>
-            <a @onclick="@goBack" class="btn btn-primary">Back</a>
-            </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-warning">Save</button>
+                    <a @onclick="@goBack" class="btn btn-primary">Back</a>
+                </div>
             </EditForm>
+        </div>
 
+    </div>
 </div>
 
 @code {
@@ -68,19 +72,19 @@
 
             string message = result ? $"success update packages '{packages.name}'" : $"failed update packages '{packages.name}'";
             await JSRuntime.InvokeVoidAsync("alert", message); // Alert
-            
-            if(result)
+
+            if (result)
                 navigationManager.NavigateTo("/travel-package");
         }
-        else 
+        else
         {
-            
+
             Console.WriteLine("add customer");
             var result = await TravelPackageServices.AddItem(packages);
             string message = result ? $"success add packages '{packages.name}'" : $"failed add packages '{packages.name}'";
             await JSRuntime.InvokeVoidAsync("alert", message); // Alert
 
-            if(result)
+            if (result)
                 navigationManager.NavigateTo("/travel-package");
         }
 
@@ -90,4 +94,4 @@
     {
         await JSRuntime.InvokeVoidAsync("alert", "Failed to submit form"); // Alert
     }
-}
+    }

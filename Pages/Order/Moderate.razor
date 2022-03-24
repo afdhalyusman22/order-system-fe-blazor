@@ -1,0 +1,109 @@
+@page "/order/moderate/{id:int}"
+@using Models.Orders
+@using Models.Statuses
+@using Services
+@inject IOrderServices OrderServices
+@inject IStatusServices StatusServices
+@inject IJSRuntime JSRuntime
+@inject NavigationManager navigationManager
+
+<PageTitle>@Title</PageTitle>
+
+<div class="row">
+    <div class="card">
+        <div class="card-header">
+            @Title
+        </div>
+        <div class="card-body">
+            <EditForm Model="@post" OnValidSubmit="@HandleValidRequest" OnInvalidSubmit="HandleInvalidRequest">
+                <DataAnnotationsValidator />
+                <div class="form-group">
+                    <label class="col-md-3">Order ID</label>
+                    <label class="col-md-8 form-control">@orders?.orderId</label>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3">Order Date</label>
+                    <label class="col-md-8 form-control">@orders?.orderDate</label>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3">Customer Name</label>
+                    <label class="col-md-8 form-control">@custName?</label>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3">Travel Package</label>
+                    <label class="col-md-8 form-control">@orders?.travel_package?.name</label>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3">Status</label>
+                    @if (statuses is null)
+                    {
+                        <InputSelect @bind-Value="@post.status" class="form-control">
+                            <option value="">none</option>
+                        </InputSelect>
+                    }
+                    @if (statuses is not null)
+                    {
+                        <InputSelect @bind-Value="@post.status" class="form-control">
+                            @foreach (var sts in statuses)
+                            {
+                            <option value="@sts.id">@sts.name</option>
+                            }
+                    </InputSelect>
+                    }
+                    <ValidationMessage For="@(() => post.status)" />
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3">Remark</label>
+                    <InputTextArea class="col-md-8 form-control" @bind-Value="@post.remark"></InputTextArea>
+                    <ValidationMessage For="@(() => post.remark)" />
+                </div>
+                <br />
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-warning">Save</button>
+                    <a @onclick="@goBack" class="btn btn-primary">Back</a>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public int id { get; set; }
+    private Orders orders = new Orders();
+    private ModerateOrders post = new ModerateOrders();
+    private Statuses[]? statuses;
+    private string? custName = string.Empty;
+    protected string Title = "Moderate Order";
+    protected override async Task OnInitializedAsync()
+    {
+        orders = await OrderServices.GetItemDetails(Convert.ToInt32(id));
+        post.status = orders?.status.id;
+        post.remark = orders?.remark;
+        custName = orders.customers.firstname + orders.customers.lastname;
+        statuses = await StatusServices.GetAllItems();
+    }
+
+    protected void goBack()
+    {
+        navigationManager.NavigateTo("/order");
+    }
+
+    protected async Task HandleValidRequest()
+    {
+        var result = await OrderServices.UpdateItem(post, Convert.ToInt32(id));
+
+        string message = result ? $"success moderate order '{orders.orderId}'" : $"failed moderate order '{orders.orderId}'";
+        await JSRuntime.InvokeVoidAsync("alert", message); // Alert
+
+        if (result)
+            navigationManager.NavigateTo("/order");
+
+
+    }
+
+    protected async Task HandleInvalidRequest()
+    {
+        await JSRuntime.InvokeVoidAsync("alert", "Failed to submit form"); // Alert
+    }
+}

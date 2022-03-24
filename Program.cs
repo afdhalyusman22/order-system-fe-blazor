@@ -10,5 +10,6 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddHttpClient<ICustomerServices, CustomerServices>(x => x.BaseAddress = new Uri(STRAPI_API_URL));
 builder.Services.AddHttpClient<IOrderServices, OrderServices>(x => x.BaseAddress = new Uri(STRAPI_API_URL));
 builder.Services.AddHttpClient<ITravelPackageServices, TravelPackageServices>(x => x.BaseAddress = new Uri(STRAPI_API_URL));
+builder.Services.AddHttpClient<IStatusServices, StatusServices>(x => x.BaseAddress = new Uri(STRAPI_API_URL));
 
 await builder.Build().RunAsync();

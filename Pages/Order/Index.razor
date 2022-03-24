@@ -8,7 +8,6 @@
 <PageTitle>Order</PageTitle>
 
 <h1>Order</h1>
-<a href="/order/add" class="btn btn-outline-success"> add</a>
 @if (orders == null)
 {
     <p><em>Data Order tidak tersedia</em></p>
@@ -21,6 +20,7 @@ else
                 <th>ID</th>
                 <th>Order ID</th>
                 <th>Order Date</th>
+                        <th>Status</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -31,11 +31,21 @@ else
                     <td>@order.id</td>
                     <td>@order.orderId</td>
                     <td>@order.orderDate</td>
+                                    <td>@order.status.name</td>
                     <td>
-                        <a @onclick="() => delete(order)" class="btn btn-outline-danger">delete</a>
-                        <a href="/order/edit/@order.id" class="btn btn-outline-primary">
-                            edit
-                        </a>
+                        @if (order.status.name.ToUpper() == "SUBMITTED")
+                        {
+                                                    <a @onclick="() => delete(order)" class="btn btn-outline-danger">delete</a>
+                                                    <a href="/order/moderate/@order.id" class="btn btn-outline-primary">
+                                                        moderate
+                                                    </a>
+                        }
+                        else
+                        {
+                                    <a href="/order/detail/@order.id" class="btn btn-outline-primary">
+                                        detail
+                                    </a>
+                        }
                     </td>
                 </tr>
             }

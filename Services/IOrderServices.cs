@@ -11,5 +11,7 @@ public interface IOrderServices
 {
     Task<Orders[]> GetAllItems();
     Task<bool> DeleteItem(int id);
+    Task<Orders> GetItemDetails(int id);
+    Task<bool> UpdateItem(ModerateOrders item, int id);
 
 }

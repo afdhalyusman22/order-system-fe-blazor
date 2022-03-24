@@ -39,7 +39,6 @@ public class Customers
 
 public class CustomerDetail
 {
-    public int id { get; set; }
     [Required]
     public string firstname { get; set; }
     public string lastname { get; set; }

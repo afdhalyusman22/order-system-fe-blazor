@@ -13,5 +13,7 @@ public interface ICustomerServices
     Task<Customers> GetAllItems();
     Task<bool> DeleteItem(int id);
     Task<CustomerDetail> GetItemDetails(int id);
+    Task<bool> UpdateItem(CustomerDetail item, int id);
+    Task<bool> AddItem(CustomerDetail item);
 
 }

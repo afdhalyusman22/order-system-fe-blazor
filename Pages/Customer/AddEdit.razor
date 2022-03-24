@@ -5,16 +5,15 @@
 @inject IJSRuntime JSRuntime
 @inject NavigationManager navigationManager
 
-<PageTitle>Edit Customer</PageTitle>
+<PageTitle>@Title</PageTitle>
 
 <div class="row">
     <div class="col-md-12">
-        <h1>Details for @customers.firstname</h1>
+        <h1>@Title</h1>
     </div>
     <br />
     <EditForm Model="@customers" OnValidSubmit="@HandleValidRequest" OnInvalidSubmit="HandleInvalidRequest">
         <DataAnnotationsValidator />
-        <ValidationSummary></ValidationSummary>
         <div class="form-group">
             <label class="col-md-3">Firstname</label>
             <InputText class="col-md-8" @bind-Value="@customers.firstname"></InputText>
@@ -47,15 +46,17 @@
 @code {
     [Parameter] public int? id { get; set; }
     private CustomerDetail customers = new CustomerDetail();
-    protected string Message = string.Empty;
-    protected bool Saved;
+    protected string Title = string.Empty;
     protected override async Task OnInitializedAsync()
     {
         Console.WriteLine(id);
         if (id != null)
         {
             customers = await CustomerServices.GetItemDetails(Convert.ToInt32(id));
+            Title = "Edit Customer";
         }
+        else
+            Title = "Add Customer";
         Console.WriteLine(customers);
     }
 
@@ -66,30 +67,35 @@
 
     protected async Task HandleValidRequest()
     {
-        Console.WriteLine("submit");
-        if (id != null) // We need to add the item
+        Console.WriteLine("submit id" + id);
+        Console.WriteLine(customers);
+        if (id != null)
         {
-            @* var res = await TodoDataService.AddItem(Item);
+            Console.WriteLine("edit customer");
+            var result = await CustomerServices.UpdateItem(customers, Convert.ToInt32(id));
 
-                if(res != null)
-                {
-                Saved = true;
-                Message = "Item has been added";
-                } else
-                {
-                Message = "Something went wrong";
-                } *@
+            string message = result ? $"success update customer '{customers.firstname}'" : $"failed update customer '{customers.firstname}'";
+            await JSRuntime.InvokeVoidAsync("alert", message); // Alert
+            
+            if(result)
+                navigationManager.NavigateTo("/customer");
         }
-        else // We are updating the item
+        else 
         {
-            //await TodoDataService.UpdateItem(Item);
-            Saved = true;
-            Message = "Item has been updated";
+            
+            Console.WriteLine("add customer");
+            var result = await CustomerServices.AddItem(customers);
+            string message = result ? $"success add customer '{customers.firstname}'" : $"failed add customer '{customers.firstname}'";
+            await JSRuntime.InvokeVoidAsync("alert", message); // Alert
+
+            if(result)
+                navigationManager.NavigateTo("/customer");
         }
+
     }
 
-    protected void HandleInvalidRequest()
+    protected async Task HandleInvalidRequest()
     {
-        Message = "Failed to submit form";
+        await JSRuntime.InvokeVoidAsync("alert", "Failed to submit form"); // Alert
     }
 }

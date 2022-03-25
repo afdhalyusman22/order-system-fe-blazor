@@ -1,0 +1,64 @@
+@page "/login"
+
+@using Models.Authentication
+@layout AuthLayout
+@inject NavigationManager navigationManager
+@inject CustomStateProvider authStateProvider
+
+<style>
+    .card {
+        margin: 0 auto;
+        /* Added */
+        float: none;
+        /* Added */
+        margin-bottom: 10px;
+        /* Added */
+    }
+</style>
+<div class="card" style="width: 50rem;">
+    <h4 class="card-header">Login To CMS</h4>
+    <div class="card-body">
+
+        <EditForm class="form-signin" OnValidSubmit="OnSubmit" Model="loginRequest">
+            <DataAnnotationsValidator />
+
+            <label for="inputUsername" class="sr-only">User Name</label>
+            <InputText id="inputUsername" class="form-control" @bind-Value="loginRequest.email" autofocus
+                placeholder="Username" />
+            <ValidationMessage For="@(() => loginRequest.email)" />
+
+            <label for="inputPassword" class="sr-only">Password</label>
+            <InputText type="password" id="inputPassword" class="form-control" placeholder="password"
+                @bind-Value="loginRequest.password" />
+            <ValidationMessage For="@(() => loginRequest.password)" />
+            <hr />
+
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+
+            <label class="text-danger">@error</label>
+
+            @* <NavLink href="register">
+                <h6 class="font-weight-normal text-center">Create account</h6>
+                </NavLink> *@
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    LoginRequest loginRequest { get; set; } = new LoginRequest();
+    string error { get; set; }
+
+    async Task OnSubmit()
+    {
+        error = null;
+        try
+        {
+            await authStateProvider.Login(loginRequest);
+            navigationManager.NavigateTo("");
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;
+        }
+    }
+}

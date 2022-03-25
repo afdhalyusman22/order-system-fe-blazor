@@ -24,13 +24,10 @@ public class LocalStorageService : ILocalStorageService
         try
         {
             var json = await _jsRuntime.InvokeAsync<string>("localStorage.getItem", key);
-            Console.WriteLine(json);
-
             if (json == null)
                 return default;
 
             return JsonSerializer.Deserialize<T>(json);
-
         }
         catch
         {

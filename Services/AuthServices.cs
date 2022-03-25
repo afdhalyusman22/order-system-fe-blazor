@@ -19,23 +19,22 @@ public class AuthService : IAuthService
     {
         _currentUser = await _localStorageService.GetItem<string>(_userKey);
         Console.WriteLine("localstorage value" + _currentUser);
-        //var result = await _httpClient.GetFromJsonAsync<CurrentUser>("api/auth/currentuserinfo");
         return _currentUser;
     }
     public async Task Login(LoginRequest loginRequest)
     {
         var result = await _httpClient.PostAsJsonAsync("/admin/login", loginRequest);
-        if (result.StatusCode == System.Net.HttpStatusCode.BadRequest) throw new Exception(await result.Content.ReadAsStringAsync());
+        Console.WriteLine(result.Content.ReadAsStringAsync());
+        if (result.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            throw new Exception("Failed Login");
         result.EnsureSuccessStatusCode();
         var desUser = JsonSerializer.Deserialize<CurrentUser>(await result.Content.ReadAsStringAsync());
-        Console.WriteLine("result login = " + desUser);
         await _localStorageService.SetItem(_userKey, desUser.data.user.email);
 
     }
     public async Task Logout()
     {
-        //var result = await _httpClient.PostAsync("api/auth/logout", null);
-        //result.EnsureSuccessStatusCode();
+        await _localStorageService.RemoveItem(_userKey);
     }
     public async Task Register(RegisterRequest registerRequest)
     {

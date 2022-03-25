@@ -8,6 +8,7 @@ public class Attributes
     public string lastname { get; set; }
     public string phone { get; set; }
     public string address { get; set; }
+    public string email { get; set; }
     public DateTime createdAt { get; set; }
     public DateTime updatedAt { get; set; }
 }
@@ -46,5 +47,7 @@ public class CustomerDetail
     public string phone { get; set; }
     [Required]
     public string address { get; set; }
+    [Required]
+    public string email { get; set; }
 
 }

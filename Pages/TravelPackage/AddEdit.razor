@@ -53,7 +53,6 @@
         }
         else
             Title = "Add Travel Packages";
-        Console.WriteLine(packages);
     }
 
     protected void goBack()
@@ -78,8 +77,6 @@
         }
         else
         {
-
-            Console.WriteLine("add customer");
             var result = await TravelPackageServices.AddItem(packages);
             string message = result ? $"success add packages '{packages.name}'" : $"failed add packages '{packages.name}'";
             await JSRuntime.InvokeVoidAsync("alert", message); // Alert

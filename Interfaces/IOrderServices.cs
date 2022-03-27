@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using order_system_fe_blazor.Models.Orders;
-namespace order_system_fe_blazor.Services;
+namespace order_system_fe_blazor.Interfaces;
 
 public interface IOrderServices
 {

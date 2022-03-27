@@ -55,7 +55,6 @@
     protected string Title = string.Empty;
     protected override async Task OnInitializedAsync()
     {
-        Console.WriteLine(id);
         if (id != null)
         {
             customers = await CustomerServices.GetItemDetails(Convert.ToInt32(id));
@@ -63,7 +62,6 @@
         }
         else
             Title = "Add Customer";
-        Console.WriteLine(customers);
     }
 
     protected void goBack()
@@ -73,13 +71,10 @@
 
     protected async Task HandleValidRequest()
     {
-        Console.WriteLine("submit id" + id);
         Console.WriteLine(customers);
         if (id != null)
         {
-            Console.WriteLine("edit customer");
             var result = await CustomerServices.UpdateItem(customers, Convert.ToInt32(id));
-
             string message = result ? $"success update customer '{customers.firstname}'" : $"failed update customer '{customers.firstname}'";
             await JSRuntime.InvokeVoidAsync("alert", message); // Alert
 
@@ -88,8 +83,6 @@
         }
         else
         {
-
-            Console.WriteLine("add customer");
             var result = await CustomerServices.AddItem(customers);
             string message = result ? $"success add customer '{customers.firstname}'" : $"failed add customer '{customers.firstname}'";
             await JSRuntime.InvokeVoidAsync("alert", message); // Alert

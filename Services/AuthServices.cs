@@ -1,16 +1,17 @@
 using System.Net.Http.Json;
 using System.Text.Json;
 using order_system_fe_blazor.Models.Authentication;
+using order_system_fe_blazor.Interfaces;
 
 namespace order_system_fe_blazor.Services;
 
-public class AuthService : IAuthService
+public class AuthServices : IAuthServices
 {
     private readonly HttpClient _httpClient;
     private readonly ILocalStorageService _localStorageService;
     private string _currentUser;
     private string _userKey = "user";
-    public AuthService(HttpClient httpClient, ILocalStorageService localStorageService)
+    public AuthServices(HttpClient httpClient, ILocalStorageService localStorageService)
     {
         _httpClient = httpClient;
         _localStorageService = localStorageService;

@@ -1,8 +1,8 @@
 using order_system_fe_blazor.Models.Authentication;
 
-namespace order_system_fe_blazor.Services;
+namespace order_system_fe_blazor.Interfaces;
 
-public interface IAuthService
+public interface IAuthServices
 {
     Task Login(LoginRequest loginRequest);
     Task Register(RegisterRequest registerRequest);

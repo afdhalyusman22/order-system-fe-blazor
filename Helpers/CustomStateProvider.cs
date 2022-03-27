@@ -1,14 +1,15 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Components.Authorization;
 using order_system_fe_blazor.Models.Authentication;
+using order_system_fe_blazor.Interfaces;
 
-namespace order_system_fe_blazor.Services;
+namespace order_system_fe_blazor.Helpers;
 
 public class CustomStateProvider : AuthenticationStateProvider
 {
-    private readonly IAuthService api;
+    private readonly IAuthServices api;
     private string _currentUser { get; set; }
-    public CustomStateProvider(IAuthService api)
+    public CustomStateProvider(IAuthServices api)
     {
         this.api = api;
     }

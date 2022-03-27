@@ -1,6 +1,7 @@
 using System.Text.Json;
 using System.Text;
 using order_system_fe_blazor.Models.TravelPackages;
+using order_system_fe_blazor.Interfaces;
 namespace order_system_fe_blazor.Services;
 
 public class TravelPackageServices : ITravelPackageServices
